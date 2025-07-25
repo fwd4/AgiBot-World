@@ -222,7 +222,8 @@ class LightningA2D(LightningDataset):
         self.all_eval_datasets = []
 
         all_cfgs = []
-        cfg_paths = ["/mnt/chenjin/AgiBot-World/latent_action_model/config/lam-a2d.py"]
+        #cfg_paths = ["/mnt/chenjin/AgiBot-World/latent_action_model/config/lam-a2d.py"]
+        cfg_paths = ["latent_action_model/config/lam-a2d.py"]
         for cfg_path in cfg_paths:
             file_path = Path(cfg_path)
             sys.path.insert(0, str(file_path.parent))

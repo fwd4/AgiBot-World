@@ -531,6 +531,7 @@ class LAMStage1Dataset(BaseDataset):
                         "random_video_len": raw_target["random_video_len"],
                         "videos": raw_target["videos"],
                         "ctrl_freqs": torch.tensor([freq], dtype=torch.float32),
+                        "task_instruction": raw_target["sub_job_description"],
                     }
                 )
 

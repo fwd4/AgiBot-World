@@ -67,10 +67,15 @@ class DINO_LAM(LightningModule):
         if stage_one_ckpt and path.exists(stage_one_ckpt):
             lam_ckpt = torch.load(stage_one_ckpt)['state_dict']
             stage1_ckpt = {}
-            for key in lam_ckpt.keys():
-                if 'vq' in key or 'action_latent' in key:
+            if stage == 'stage-1':
+                for key in lam_ckpt.keys():
                     stage1_ckpt[key.replace("lam.", "")] = lam_ckpt[key]
-            self.lam.load_state_dict(stage1_ckpt, strict=False)
+                self.lam.load_state_dict(stage1_ckpt, strict=True)
+            else:
+                for key in lam_ckpt.keys():
+                    if 'vq' in key or 'action_latent' in key:
+                        stage1_ckpt[key.replace("lam.", "")] = lam_ckpt[key]
+                self.lam.load_state_dict(stage1_ckpt, strict=False)
 
         self.lam_num_latents = lam_num_latents
         self.vq_beta = vq_beta

@@ -8,7 +8,7 @@ from prismatic.vla.datasets.pretrainAe_a2d_pretrain_v6 import ActionSpacePadder
 from prismatic.vla.datasets.alpha_base_cfg import BaseDatasetArguments, BaseDataTrainingArguments, BaseModelArguments
 
 RUNNAME = os.environ.get("RUNNAME")
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 
 class Task:
@@ -202,7 +202,7 @@ beta_set = [
     363,
     351,
 ]
-train_task_ids = alpha_set + beta_set
+train_task_ids = range(10) #alpha_set + beta_set
 train_set = {}
 val_set = {}
 if DEBUG_MODE:
@@ -220,8 +220,8 @@ for num in train_task_ids:
 
 @dataclass
 class DatasetArguments(BaseDatasetArguments):
-    meta_json_dir: Optional[str] = "/mnt/public/hexindong/SHARE_FILES/processed_json_202502131400_split"
-    data_root_dir: Optional[str] = "/mnt/public/E6"
+    meta_json_dir: Optional[str] = "/home/lianyaoxiu/lianyaoxiu/fwd4/AgiBot-World/data/SimData"
+    data_root_dir: Optional[str] = "/home/lianyaoxiu/lianyaoxiu/fwd4/AgiBot-World/data/SimData"
     valid_episode_txt: Optional[str] = None
     use_train_dataset_cache: str = field(default="")
     use_eval_dataset_cache: str = field(default="")

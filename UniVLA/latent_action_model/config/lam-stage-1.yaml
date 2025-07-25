@@ -15,28 +15,30 @@ model:
   optimizer:
     class_path: torch.optim.AdamW
     init_args:
-      lr: 1e-4
-      weight_decay: 1e-2
+      lr: 5e-5
+      weight_decay: 1e-3
 
   task_name: task_centric_lam_stage1
   make_data_pair: &make_data_pair false
   stage: stage-1
+  stage_one_ckpt: /share/public/lianyaoxiu/.cache/huggingface/hub/models--qwbu--univla-latent-action-model/snapshots/b5401d195f9f2ed443202ad1bbdf8c191b557242/lam-stage-1.ckpt
+  #stage_one_ckpt: ./logs/task_centric_lam_stage1/epoch=13-step=10000.ckpt
 
 data:
-  data_root: /path/to/your/rlds_data_collection
+  data_root: /home/lianyaoxiu/lianyaoxiu/fwd4/AgiBot-World/data/SimData
   data_mix: omni_magic_soup_plus_plus       # Manip. + Navi. + Human
   batch_size: 64
   resolution: 224
   num_frames: 16  # TODO
   episodic: false
-  shuffle_buffer_size: 45000                # works fine for 1,600 GB memories, plz adjust based on yout setup
+  shuffle_buffer_size: 15000                # works fine for 1,600 GB memories, plz adjust based on yout setup
   image_aug: true
 
 trainer:
-  max_epochs: 20
+  max_epochs: 5
   accelerator: gpu
   num_nodes: 1
-  devices: 8
+  devices: 3
   strategy: ddp_find_unused_parameters_false
   precision: 16-mixed
   log_every_n_steps: 1000
@@ -49,7 +51,7 @@ trainer:
         verbose: true
         save_last: true
         save_top_k: -1
-        every_n_train_steps: 20000
+        every_n_train_steps: 2000
 
   logger:
     - class_path: lightning.pytorch.loggers.TensorBoardLogger

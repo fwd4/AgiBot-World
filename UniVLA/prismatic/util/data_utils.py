@@ -297,11 +297,13 @@ class data_collator_lam:
         # Handling of all other possible keys.
         # Again, we will use the first element to figure out which key/values are not None for this model.
         for k, v in first.items():
-            if k in ("videos"):
+            if k in ("videos", "task_instruction"):
                 if isinstance(v, torch.Tensor):
                     batch[k] = torch.concat([f[k] for f in instances])
                 elif isinstance(v, np.ndarray):
                     batch[k] = torch.concat(np.stack([f[k] for f in instances]))
+                elif isinstance(v, str):
+                    batch[k] = [f[k] for f in instances]
                 else:
                     batch[k] = torch.concat([f[k] for f in instances])
         

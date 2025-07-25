@@ -513,8 +513,8 @@ class DatasetTargetDualArmOnlyImage:
                 for j in range(0, vid_len - self.random_video_len[0]):
                     start = j
                     end = j + random_length
-                    if end > vid_len:
-                        end = vid_len
+                    if end >= vid_len:
+                        end = vid_len - 1
                         start = max(vid_len - random_length, 0)
 
                     used_cam_cfg = {}
@@ -527,8 +527,8 @@ class DatasetTargetDualArmOnlyImage:
                         "sn_code": f"{info['sn_code']}",
                         "episode_id": f"{info['episode_id']}",
                         "episode_dir": info["episode_dir"],
-                        "frame_idx": f"{start}",
-                        "target_idx": f"{end}",
+                        "frame_idx": f"{start + start_idx}",
+                        "target_idx": f"{end + start_idx}",
                         "used_cam_cfg": used_cam_cfg,
                         "job_description": job_description,
                         "sub_job_description": sub_job_description,
