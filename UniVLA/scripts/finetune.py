@@ -34,6 +34,7 @@ import prismatic.vla.datasets.pretrainAe_a2d_pretrain_v6 as a2d_cfg
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 class ActionDecoder(torch.nn.Module):
     def __init__(
@@ -271,6 +272,7 @@ def finetune(cfg):
         decoder_n_layers=cfg.decoder_n_layers,
         decoder_hidden_dim=cfg.decoder_hidden_dim,
         with_proprio=cfg.with_proprio,
+        wogripper=cfg.wogripper,
         action_decoder_path=cfg.adr_path,
         decoupled_loss=cfg.decouple,
         ).to(device_id)
@@ -555,19 +557,18 @@ def finetune(cfg):
                 smoothened_action_accuracy = sum(recent_action_accuracies) / len(recent_action_accuracies)
 
                 # Push Metrics to W&B (every 10 gradient steps)
-                # if distributed_state.is_main_process and gradient_step_idx % 5 == 0 and not cfg.debug:
-                    
-                #     wandb.log(
-                #         {
-                #             "train_loss": smoothened_loss,
-                #             "latent_action_accuracy": smoothened_action_accuracy,
-                #             "action_loss": act_loss.item(),
-                #             "action_loss_1step": loss_one_step.item(),
-                #             "lr": optimizer.state_dict()['param_groups'][0]['lr']
-                #             # "latent_align_loss": latent_align_loss.item(),
-                #         },
-                #         step=gradient_step_idx + current_step,
-                #     )
+                if distributed_state.is_main_process and gradient_step_idx % 5 == 0 and not cfg.debug:
+                    wandb.log(
+                        {
+                            "train_loss": smoothened_loss,
+                            "latent_action_accuracy": smoothened_action_accuracy,
+                            "action_loss": act_loss.item(),
+                            "action_loss_1step": loss_one_step.item(),
+                            "lr": optimizer.state_dict()['param_groups'][0]['lr']
+                            # "latent_align_loss": latent_align_loss.item(),
+                        },
+                        step=gradient_step_idx + current_step,
+                    )
 
                 # Initialize Logging =>> TensorBoard
                 if distributed_state.is_main_process:
